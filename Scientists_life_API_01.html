@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explore Scientist's Life and Contributions</title>
+    <style>
+        :root {
+            --primary-color: #1a5276;
+            --secondary-color: #117a65;
+            --background-color: #f7f9fc;
+            --text-color: #333;
+            --light-gray: #eaecef;
+            --card-background: white;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background-color);
+            color: var(--text-color);
+            padding: 20px;
+            max-width: 1000px;
+            margin: auto;
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        p.lead {
+            text-align: center;
+            color: #555;
+            font-size: 1.15em;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        #searchBox {
+            flex: 1;
+            max-width: 500px;
+            padding: 14px;
+            font-size: 1em;
+            border: 2px solid #bdc3c7;
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+            outline: none;
+        }
+
+        #searchBox:focus {
+            border-color: var(--primary-color);
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 25px;
+            font-size: 1em;
+            cursor: pointer;
+            border-radius: 0 8px 8px 0;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: var(--secondary-color);
+        }
+
+        .error,
+        .loading {
+            text-align: center;
+            font-weight: 600;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .error {
+            color: #e74c3c;
+            background: #fde8e7;
+        }
+
+        .loading {
+            color: var(--primary-color);
+            display: none;
+            background: #e9f5ff;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border-left-color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #result {
+            display: none;
+            background: var(--card-background);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .main-content {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .sidebar {
+            flex: 0 0 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .main-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        #photo {
+            width: 200px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+            margin-bottom: 20px;
+            background-color: var(--light-gray);
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-top: 10px;
+            font-size: 2.2em;
+            margin-bottom: 5px;
+        }
+
+        .info-row {
+            margin: 12px 0;
+            font-size: 1.05em;
+            color: #555;
+        }
+
+        .info-row strong {
+            color: var(--primary-color);
+        }
+
+        h3 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--light-gray);
+            padding-bottom: 6px;
+            margin-top: 30px;
+        }
+
+        ul {
+            padding-left: 22px;
+            margin: 10px 0;
+        }
+
+        ul li {
+            margin: 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar,
+            .main-text {
+                flex: 1;
+                width: 100%;
+                text-align: left;
+            }
+
+            .sidebar {
+                align-items: flex-start;
+            }
+
+            #photo {
+                width: 150px;
+                height: 180px;
+                margin: 0;
+            }
+
+            .info-group {
+                margin-top: 20px;
+            }
+
+            .search-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #searchBox,
+            button {
+                width: 100%;
+                max-width: 100%;
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+
+            #searchBox {
+                border-right: 2px solid #bdc3c7;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <h1>🔍 Explore Scientist's Life and Contributions</h1>
+    <p class="lead">Search for any scientist to discover their biography, field of work, and key contributions.</p>
+
+    <div class="search-container">
+        <input type="text" id="searchBox" placeholder="e.g. Marie Curie" onkeydown="if(event.key === 'Enter') searchScientist()" />
+        <button onclick="searchScientist()">Search</button>
+    </div>
+
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <p>Generating content with Gemini AI...</p>
+    </div>
+    <div id="error" class="error"></div>
+
+    <div id="result">
+        <div class="main-content">
+            <div class="sidebar">
+                <img id="photo" src="" alt="Scientist" />
+                <div class="info-group">
+                    <div class="info-row">
+                        <strong>Period of Activity:</strong> <span id="period"></span>
+                    </div>
+                    <div class="info-row">
+                        <strong>Field of Study:</strong> <span id="field"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="main-text">
+                <h2 id="name"></h2>
+                <p id="introduction" style="font-size:1.1em; color:#555; margin: 5px 0 20px;"></p>
+
+                <div id="biography-section">
+                    <h3>Biography</h3>
+                    <p id="biography"></p>
+                </div>
+
+                <div id="contributions-section">
+                    <h3>Main Contributions</h3>
+                    <ul id="contributions"></ul>
+                </div>
+
+                <div id="context-section">
+                    <h3>Period of Activity & Historical Context</h3>
+                    <p id="context"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ✅ REPLACE THIS WITH YOUR DEPLOYED GOOGLE APPS SCRIPT URL
+        const GEMINI_PROXY_URL = "https://script.google.com/macros/s/AKfycbwlPL2f7v2xu8mYYGqL4wkCJzBDr-N_kn1ouU6gMtSgwKWEbqWVmoYCzsWOgN-DSoem/exec";
+
+        window.searchScientist = async function() {
+            const name = document.getElementById("searchBox").value.trim();
+            if (!name) return showError("Please enter a scientist's name.");
+
+            resetUI();
+            showLoading();
+
+            try {
+                const response = await fetch(`${GEMINI_PROXY_URL}?name=${encodeURIComponent(name)}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                updateUI(data);
+            } catch (err) {
+                console.error("Error:", err);
+                showError("Failed to generate content. Check console for details.");
+            } finally {
+                hideLoading();
+            }
+        };
+
+        function updateUI(data) {
+            document.getElementById("name").textContent = data.name;
+            document.getElementById("introduction").textContent = data.introduction;
+            document.getElementById("photo").src = data.photoUrl || "https://via.placeholder.com/200x250?text=No+Photo";
+            document.getElementById("photo").alt = `Portrait of ${data.name}`;
+            document.getElementById("period").textContent = `${data.birth}–${data.death}`;
+            document.getElementById("field").textContent = data.field;
+            document.getElementById("biography").textContent = data.biography;
+
+            const ul = document.getElementById("contributions");
+            ul.innerHTML = "";
+            (data.contributions || []).forEach(text => {
+                const li = document.createElement("li");
+                li.textContent = text;
+                ul.appendChild(li);
+            });
+
+            document.getElementById("context").textContent = data.context;
+
+            document.getElementById("biography-section").style.display = data.biography ? 'block' : 'none';
+            document.getElementById("contributions-section").style.display = data.contributions?.length > 0 ? 'block' : 'none';
+            document.getElementById("context-section").style.display = data.context ? 'block' : 'none';
+            document.getElementById("result").style.display = "block";
+        }
+
+        function showError(msg) {
+            document.getElementById("error").textContent = msg;
+            document.getElementById("error").style.display = "block";
+        }
+
+        function showLoading() {
+            document.getElementById("loading").style.display = "block";
+        }
+
+        function hideLoading() {
+            document.getElementById("loading").style.display = "none";
+        }
+
+        function resetUI() {
+            document.getElementById("error").textContent = "";
+            document.getElementById("error").style.display = "none";
+            document.getElementById("result").style.display = "none";
+        }
+
+    </script>
+</body>
+
+</html>
